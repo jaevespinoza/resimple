@@ -22,6 +22,8 @@ Luego, se debe utilizar el comando:
 
 `pnpm install`
 
+[Si no se tiene PNPM, seguir este link](https://pnpm.io/installation#using-npm)
+
 Y por último:
 
 `pnpm run dev`
