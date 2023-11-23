@@ -1,28 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-export interface Employee {
-  ID_EMPRESA: number;
-  ID_AREA: string;
-  RUT_TRABAJADOR: string;
-  NOMBRE_TRABAJADOR: string;
-  EDAD: number;
-  PROFESION: string | null;
-  CARGO: string;
-  CARGA_FAMILIAR: string[];
-}
-
-export interface IAggregateEmployee {
-  [key: string]: { [key: string]: Employee[] };
-}
-
-/**
- * Application's interface that saves the important
- * data required for the application to work.
- */
-export interface AppState {
-  information: IAggregateEmployee;
-  loading: boolean;
-}
+import { AppState, IAggregateEmployee } from "./AppInterfaces";
 
 /**
  * The initial state of the application when booted up.
@@ -30,6 +7,7 @@ export interface AppState {
 const initialState: AppState = {
   information: {} as IAggregateEmployee,
   loading: false,
+  companies: {},
 };
 
 /**
@@ -55,10 +33,18 @@ export const appSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
+    /**
+     * Function that saves the companies after processing them
+     * @param state Application's previous state
+     * @param action Action fired by the application
+     */
+    setCompanies: (state, action) => {
+      state.companies = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setInformation, setLoading } = appSlice.actions;
+export const { setInformation, setLoading, setCompanies } = appSlice.actions;
 
 export default appSlice.reducer;

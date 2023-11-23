@@ -1,8 +1,15 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AppState, setInformation, setLoading } from "../../actions/AppReducer";
+import {
+  setCompanies,
+  setInformation,
+  setLoading,
+} from "../../actions/AppReducer";
 import { fetchData } from "../../actions/AppApi";
 import Spinner from "./Spinner";
+import CompanyAccordion from "../Company/CompanyAccordion";
+import processDataJson from "../../../utils/processDataJson";
+import { RootState } from "../../../store/store";
 
 /**
  * The application's body. It's in charge of showing the spinner when it's loading,
@@ -11,7 +18,7 @@ import Spinner from "./Spinner";
  */
 const ApplicationBody = () => {
   const dispatch = useDispatch();
-  const isLoading = useSelector((state: AppState) => state.loading);
+  const isLoading = useSelector((state: RootState) => state.app.loading);
 
   useEffect(() => {
     // We create an async function that will wait for our fetched data
@@ -20,8 +27,8 @@ const ApplicationBody = () => {
       try {
         dispatch(setLoading(true));
         const data = await fetchData();
-        console.log(data);
         dispatch(setInformation(data));
+        dispatch(setCompanies(processDataJson()));
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -32,7 +39,13 @@ const ApplicationBody = () => {
     getInfo();
   }, []);
 
-  return isLoading ? <Spinner /> : <div className="container"></div>;
+  return isLoading ? (
+    <Spinner />
+  ) : (
+    <div className="application-body container">
+      <CompanyAccordion />
+    </div>
+  );
 };
 
 export default ApplicationBody;
