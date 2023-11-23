@@ -1,41 +1,20 @@
 import { read, utils } from "xlsx";
-import { Employee } from "./AppReducer";
+import {
+  parseAreasPerCompany,
+  parseCompanies,
+  parseFamilyCharge,
+  transformToObject,
+} from "./transformExcel";
 
-const transformArrayToObjectArray = (data: any[][]) => {
-  const headers = data[0] as (keyof Employee)[];
-
-  const parsedColumns = data.slice(1).map((row) => {
-    const employee: Partial<Employee> = {};
-    headers.forEach((header, index) => {
-      console.log(header === "CARGA_FAMILIAR");
-      if (header === "CARGA_FAMILIAR") {
-        employee[header as keyof Employee] = row[index]
-          ? ([row[index]] as string[])
-          : [];
-      } else {
-        employee[header as keyof Employee] = row[index] ? row[index] : null;
-      }
-    });
-
-    return employee as Employee;
-  });
-
-  const parsedCharge = parsedColumns.reduce((accum, value) => {
-    const key = value.NOMBRE_TRABAJADOR;
-    if (Object.keys(accum).includes(key)) {
-      console.log(accum[key].CARGA_FAMILIAR);
-      accum[key] = {
-        ...accum[key],
-        CARGA_FAMILIAR: [...accum[key].CARGA_FAMILIAR, ...value.CARGA_FAMILIAR],
-      };
-    } else {
-      accum[value.NOMBRE_TRABAJADOR] = value;
-    }
-
-    return accum;
-  }, {} as { [key: string]: Employee });
-
-  console.log(parsedCharge);
+/**
+ * Function that parses the entire object obtained through xlsx
+ * @param data Data obtained by the fetch call
+ */
+const transformArrayToObjectArray = (data: string[][]) => {
+  const employees = transformToObject(data);
+  const employeesWithCharge = parseFamilyCharge(employees);
+  const companiesWithEmployees = parseCompanies(employeesWithCharge);
+  return parseAreasPerCompany(companiesWithEmployees);
 };
 
 /**
@@ -49,14 +28,16 @@ export const fetchData = async () => {
     );
     const data = await response.arrayBuffer();
 
+    // We read the excel and find the first sheet
     const workbook = read(new Uint8Array(data), { type: "array" });
     const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
 
+    // We transform the sheet into a list of list of strings
     const dataArray = utils.sheet_to_json(firstSheet, {
       header: 1,
-    }) as any[][];
+    }) as string[][];
 
-    return transformArrayToObjectArray(dataArray) as Employee[];
+    return transformArrayToObjectArray(dataArray);
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error; // Re-throw the error to be caught by the caller

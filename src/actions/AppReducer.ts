@@ -11,12 +11,16 @@ export interface Employee {
   CARGA_FAMILIAR: string[];
 }
 
+export interface IAggregateEmployee {
+  [key: string]: { [key: string]: Employee[] };
+}
+
 /**
  * Application's interface that saves the important
  * data required for the application to work.
  */
 export interface AppState {
-  information: Employee[];
+  information: IAggregateEmployee;
   loading: boolean;
 }
 
@@ -24,7 +28,7 @@ export interface AppState {
  * The initial state of the application when booted up.
  */
 const initialState: AppState = {
-  information: [],
+  information: {} as IAggregateEmployee,
   loading: false,
 };
 
