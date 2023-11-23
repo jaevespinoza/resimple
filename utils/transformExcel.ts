@@ -1,4 +1,9 @@
-import { Employee, IAggregateEmployee } from "./AppReducer";
+import {
+  Employee,
+  ExcelToHeader,
+  IAggregateEmployee,
+  ParsedEmployee,
+} from "../src/actions/AppInterfaces";
 
 /**
  * Function required to parse the object obtained by xlsx library
@@ -19,13 +24,15 @@ export const transformToObject = (data: string[][]) => {
       // If the header is CARGA_FAMILIAR, we have to make an array for
       // the next data processing
       if (header === "CARGA_FAMILIAR") {
-        employee[header] = row[index] ? ([row[index]] as string[]) : [];
+        employee[ExcelToHeader[header]] = row[index]
+          ? ([row[index]] as string[])
+          : [];
       } else {
-        employee[header] = result || "";
+        employee[ExcelToHeader[header]] = result || "";
       }
     });
 
-    return employee as Employee;
+    return employee as ParsedEmployee;
   });
 };
 
@@ -36,20 +43,20 @@ export const transformToObject = (data: string[][]) => {
  * @param employees Array of employee json objects
  * @returns Json Employee object with aggregated family charges
  */
-export const parseFamilyCharge = (employees: Employee[]) => {
+export const parseFamilyCharge = (employees: ParsedEmployee[]) => {
   return employees.reduce((accum, value) => {
-    const key = value.NOMBRE_TRABAJADOR;
+    const key = value.name;
     if (Object.keys(accum).includes(key)) {
       accum[key] = {
         ...accum[key],
-        CARGA_FAMILIAR: [...accum[key].CARGA_FAMILIAR, ...value.CARGA_FAMILIAR],
+        family: [...accum[key].family, ...value.family],
       };
     } else {
-      accum[value.NOMBRE_TRABAJADOR] = value;
+      accum[key] = value;
     }
 
     return accum;
-  }, {} as { [key: string]: Employee });
+  }, {} as { [key: string]: ParsedEmployee });
 };
 
 /**
@@ -58,10 +65,12 @@ export const parseFamilyCharge = (employees: Employee[]) => {
  * @param employees Json Employee object
  * @returns Json company object with its grouped employees
  */
-export const parseCompanies = (employees: { [key: string]: Employee }) => {
+export const parseCompanies = (employees: {
+  [key: string]: ParsedEmployee;
+}) => {
   return Object.keys(employees).reduce((accum, value) => {
     const employee = employees[value];
-    const companyKey = employee.ID_EMPRESA;
+    const companyKey = employee.companyId;
     // We group the employees by company. If one already exists in the
     // accumulative object, we add the employee to its list.
     if (Object.keys(accum).includes(companyKey.toLocaleString())) {
@@ -71,7 +80,7 @@ export const parseCompanies = (employees: { [key: string]: Employee }) => {
     }
 
     return accum;
-  }, {} as { [key: string]: Employee[] });
+  }, {} as { [key: string]: ParsedEmployee[] });
 };
 
 /**
@@ -80,7 +89,7 @@ export const parseCompanies = (employees: { [key: string]: Employee }) => {
  * @returns JSon company object with its grouped areas.
  */
 export const parseAreasPerCompany = (companies: {
-  [key: string]: Employee[];
+  [key: string]: ParsedEmployee[];
 }) => {
   return Object.keys(companies).reduce((accum, companyId) => {
     const employeeByCompany = companies[companyId];
@@ -88,7 +97,7 @@ export const parseAreasPerCompany = (companies: {
     // If one area already exists, we append the employee to its area.
     const aggregateByArea = employeeByCompany.reduce(
       (accumArea, employee) => {
-        const areaId = employee.ID_AREA;
+        const areaId = employee.areaId;
         if (Object.keys(accumArea).includes(areaId)) {
           accumArea[areaId] = [...accumArea[areaId], employee];
         } else {
@@ -98,7 +107,7 @@ export const parseAreasPerCompany = (companies: {
         return accumArea;
       },
 
-      {} as { [key: string]: Employee[] }
+      {} as { [key: string]: ParsedEmployee[] }
     );
 
     accum[companyId] = aggregateByArea;

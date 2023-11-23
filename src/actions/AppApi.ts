@@ -4,7 +4,7 @@ import {
   parseCompanies,
   parseFamilyCharge,
   transformToObject,
-} from "./transformExcel";
+} from "../../utils/transformExcel";
 
 /**
  * Function that parses the entire object obtained through xlsx

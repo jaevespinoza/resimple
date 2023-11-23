@@ -20,6 +20,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "store"],
+  "include": ["src", "store", "utils/transformExcel.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

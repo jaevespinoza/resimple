@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Employee, ICompany } from "../../actions/AppInterfaces";
+import { ICompany, ParsedEmployee } from "../../actions/AppInterfaces";
 import EmployeeTable from "../Employee/EmployeeTable";
 import "./styles.scss";
 
@@ -14,7 +14,7 @@ const AreaAccordion = ({
   companyId,
   companies,
 }: {
-  areas: { [key: string]: Employee[] };
+  areas: { [key: string]: ParsedEmployee[] };
   companyId: string;
   companies: { [key: number]: ICompany };
 }) => {

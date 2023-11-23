@@ -1,11 +1,11 @@
-import { Employee } from "../../actions/AppInterfaces";
+import { ParsedEmployee } from "../../actions/AppInterfaces";
 
 /**
  * Table that shows the employees' information such as their ID number,
  * name, age, and profession
  * @param employees List of employees by area
  */
-const EmployeeTable = ({ employees }: { employees: Employee[] }) => {
+const EmployeeTable = ({ employees }: { employees: ParsedEmployee[] }) => {
   return (
     <table className="table">
       <thead>
@@ -22,15 +22,15 @@ const EmployeeTable = ({ employees }: { employees: Employee[] }) => {
         {employees.map((employee) => {
           return (
             <tr>
-              <td>{employee.NOMBRE_TRABAJADOR}</td>
-              <td>{employee.RUT_TRABAJADOR}</td>
-              <td>{employee.EDAD}</td>
-              <td>{employee.PROFESION ? employee.PROFESION : "Sin trabajo"}</td>
-              <td>{employee.CARGO}</td>
+              <td>{employee.name}</td>
+              <td>{employee.identifierNumber}</td>
+              <td>{employee.age}</td>
+              <td>{employee.career ? employee.career : "Sin trabajo"}</td>
+              <td>{employee.title}</td>
               <td>
                 <ul>
-                  {employee.CARGA_FAMILIAR.length > 0
-                    ? employee.CARGA_FAMILIAR.map((charge) => <li>{charge}</li>)
+                  {employee.family.length > 0
+                    ? employee.family.map((charge) => <li>{charge}</li>)
                     : "No aplica"}
                 </ul>
               </td>

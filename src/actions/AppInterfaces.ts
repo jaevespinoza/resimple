@@ -9,8 +9,30 @@ export interface Employee {
   CARGA_FAMILIAR: string[];
 }
 
+export interface ParsedEmployee {
+  companyId: number;
+  areaId: string;
+  identifierNumber: string;
+  name: string;
+  age: string;
+  career: string | null;
+  title: string;
+  family: string[];
+}
+
+export enum ExcelToHeader {
+  ID_EMPRESA = "companyId",
+  ID_AREA = "areaId",
+  RUT_TRABAJADOR = "identifierNumber",
+  NOMBRE_TRABAJADOR = "name",
+  EDAD = "age",
+  PROFESION = "career",
+  CARGO = "title",
+  CARGA_FAMILIAR = "family",
+}
+
 export interface IAggregateEmployee {
-  [key: string]: { [key: string]: Employee[] };
+  [key: string]: { [key: string]: ParsedEmployee[] };
 }
 
 /**
