@@ -1,4 +1,11 @@
 .area-accordion {
+  margin: 10px;
+  &__button {
+    width: 100%;
+    background-color: #e2f4eb;
+    border-radius: 0;
+    border: 1px solid #dde4e3;
+  }
   &__body {
     overflow-x: auto;
   }

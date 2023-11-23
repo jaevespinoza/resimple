@@ -33,10 +33,10 @@ const AreaAccordion = ({
           const itemKey = `${companyId}-${areaId}`;
           const isAreaInExpanded = expanded.includes(itemKey);
           return (
-            <div className="accordion-item" key={areaId}>
-              <h2 className="accordion-header" id={`heading-${itemKey}`}>
+            <div className="accordion-item area-accordion" key={areaId}>
+              <p className="accordion-header" id={`heading-${itemKey}`}>
                 <button
-                  className="accordion-button"
+                  className="area-accordion__button"
                   type="button"
                   onClick={() => onClickAccordion(`${itemKey}`)}
                   data-bs-toggle="collapse"
@@ -46,7 +46,7 @@ const AreaAccordion = ({
                 >
                   {companies[Number(companyId)].companyArea[areaId].areaName}
                 </button>
-              </h2>
+              </p>
               <div
                 id={`collapse-${itemKey}`}
                 className={`accordion-collapse collapse ${

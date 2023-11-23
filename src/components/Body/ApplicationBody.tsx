@@ -7,6 +7,7 @@ import {
 } from "../../actions/AppReducer";
 import { fetchData } from "../../actions/AppApi";
 import Spinner from "./Spinner";
+import "./styles.scss";
 import CompanyAccordion from "../Company/CompanyAccordion";
 import processDataJson from "../../../utils/processDataJson";
 import { RootState } from "../../../store/store";

@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { RootState } from "../../../store/store";
+import "./styles.scss";
 import AreaAccordion from "../Area/AreaAccordion";
 
 /**
@@ -25,11 +26,11 @@ const CompanyAccordion = () => {
       {Object.entries(information).map(([companyId, areas]) => {
         const isValueInExpanded = expanded.includes(companyId);
         return (
-          <div className="accordion-item" key={companyId}>
-            <h2 className="accordion-header" id={`heading-${companyId}`}>
+          <div className="accordion-item company-accordion" key={companyId}>
+            <p className="accordion-header" id={`heading-${companyId}`}>
               <button
-                className="accordion-button"
                 type="button"
+                className="company-accordion__button"
                 onClick={() => onClickAccordion(companyId)}
                 data-bs-toggle="collapse"
                 data-bs-target={`#collapse-${companyId}`}
@@ -38,10 +39,10 @@ const CompanyAccordion = () => {
               >
                 {companies[Number(companyId)].companyName}
               </button>
-            </h2>
+            </p>
             <div
               id={`collapse-${companyId}`}
-              className={`accordion-collapse collapse ${
+              className={`accordion-collapse company-accordion__body collapse ${
                 isValueInExpanded ? "show" : ""
               }`}
               aria-labelledby={`heading-${companyId}`}

@@ -9,6 +9,9 @@ export interface Employee {
   CARGA_FAMILIAR: string[];
 }
 
+/**
+ * Employee interface that transforms the Spanish names into English
+ */
 export interface ParsedEmployee {
   companyId: number;
   areaId: string;
@@ -20,6 +23,10 @@ export interface ParsedEmployee {
   family: string[];
 }
 
+/**
+ * Enum in charge of being the translator between the Spanish headers
+ * and the English keys for the JSON parsed
+ */
 export enum ExcelToHeader {
   ID_EMPRESA = "companyId",
   ID_AREA = "areaId",
